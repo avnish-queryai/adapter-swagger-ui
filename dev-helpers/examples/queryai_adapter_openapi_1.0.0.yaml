@@ -1,0 +1,194 @@
+openapi: 3.0.0
+info:
+  title: Platform Adapter API
+  description: Describe [Query.AI](https://query.ai) Platform Adapter API
+  version: 1.0.0
+servers:
+  - url: https://proxy.query.ai
+    description: Production proxy server
+  - url: https://proxynext.query.ai
+    description: Internal staging server for testing
+paths:
+  /query:
+    post:
+      summary: Creates a proxy request to a platform.
+      description: Creates a proxy request to a platform.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                platform:
+                  type: string
+                parseTree:
+                  type: object
+                params:
+                  type: string
+                args:
+                  type: object
+      responses:
+        '201':    # status code
+          description: A JSON object with request ID.
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  id:
+                    type: string
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+        
+  /query/{id}:
+    parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get request status.
+      description: Get request status of an earlier submitted create request.
+      responses:
+        '200':    # status code
+          description: A JSON object with request status and response
+          content:
+            application/json:
+              schema: 
+                type: object
+                properties:
+                  version:
+                    type: number
+                    description: Shows the schema version.
+                  status:
+                    type: string
+                    description: Shows a request status.
+                    enum:
+                    - completed
+                    - inprogress
+                    - queued
+                    - error
+                    - cancelled
+                  errors:
+                    type: array
+                    items:
+                      $ref: components.yaml#/components/schemas/Error
+                  platform:
+                    type: string
+                    description: A platform type.
+                  data:
+                    type: object
+                    description: It contains both the raw and contextual data. Contextual data is custom data derived from raw response. Eg - UserInfo, HostInfo, Alert, etc.
+                    properties:
+                      contextualResult:
+                        type: object
+                        properties:
+                            loginActivity:
+                              type: object
+                              properties:
+                                data:
+                                  type: array
+                                  items:
+                                    $ref: components.yaml#/components/schemas/LoginEvent
+                                metadata:
+                                  $ref: components.yaml#/components/schemas/Metadata
+                                category:
+                                  $ref: components.yaml#/components/schemas/Category
+                            userInfo:
+                              type: object
+                              properties:
+                                data:
+                                  type: array
+                                  items:
+                                    $ref: components.yaml#/components/schemas/UserInfo
+                                metadata:
+                                  $ref: components.yaml#/components/schemas/Metadata
+                                category:
+                                  $ref: components.yaml#/components/schemas/Category
+
+                            hostInfo:
+                              type: object
+                              properties:
+                                data:
+                                  type: array
+                                  items:
+                                    $ref: components.yaml#/components/schemas/HostInfo
+                                metadata:
+                                  $ref: components.yaml#/components/schemas/Metadata
+                                category:
+                                  $ref: components.yaml#/components/schemas/Category
+                            alert:
+                              type: object
+                              properties:
+                                data:
+                                  type: array
+                                  items:
+                                    $ref: components.yaml#/components/schemas/AlertInfo
+                                metadata:
+                                  $ref: components.yaml#/components/schemas/Metadata
+                                category:
+                                  $ref: components.yaml#/components/schemas/Category
+                            ticket:
+                              type: object
+                              properties:
+                                data:
+                                  type: array
+                                  items:
+                                    $ref: components.yaml#/components/schemas/Ticket
+                                metadata:
+                                  $ref: components.yaml#/components/schemas/Metadata
+                                category:
+                                  $ref: components.yaml#/components/schemas/Category
+                                
+                            process:
+                              type: object
+                              properties:
+                                data:
+                                  type: array
+                                  items:
+                                    type: object
+                                metadata:
+                                  $ref: components.yaml#/components/schemas/Metadata
+                                category:
+                                  $ref: components.yaml#/components/schemas/Category
+                                  
+                                
+                      rawResult:
+                        $ref: components.yaml#/components/schemas/RawResponse                              
+        '404':
+          description: id not found
+          errors:
+            type: array
+            items:
+              $ref: components.yaml#/components/schemas/Error
+
+        '401':
+          description: Unauthorized
+          errors:
+            type: array
+            items:
+              $ref: components.yaml#/components/schemas/Error
+        
+    delete:
+      summary: Delete request by id
+      responses:
+        '204':
+          description: Deleted
+        '404':
+          description: id not found
+          errors:
+            type: array
+            items:
+              $ref: components.yaml#/components/schemas/Error
+        '401':
+          description: Unauthorized
+          errors:
+            type: array
+            items:
+              $ref: components.yaml#/components/schemas/Error
