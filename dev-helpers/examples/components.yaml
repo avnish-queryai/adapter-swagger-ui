@@ -17,6 +17,16 @@ components:
             type: array
             items:
               type: string
+      required:
+        - fields
+        - normalizedFields
+        - rows
+    FieldPriority:
+      type: number
+      enum:
+      - 1
+      - 2
+      - 3
     UserStatus:
       type: string
       enum:
@@ -52,16 +62,103 @@ components:
     Client:
       type: object
       properties:
-        id: 
-          type: string
+        id:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
         geoLocation:
-          $ref: '#/components/schemas/GeoLocation'
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              $ref: '#/components/schemas/GeoLocation'
         location:
-          $ref: '#/components/schemas/Location'
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              $ref: '#/components/schemas/Location'
         ipAddress:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
+        device:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
+        os:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
+        agent:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
+    UserEntityInfo:
+      type: object
+      properties:
+        id:
           type: string
-        device: 
-          type: string 
+        email: 
+          type: string
+        username:
+          type: string
+      description: this is a subset of UserInfo.
+    HostEntityInfo:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+      description: this is a subset of HostInfo.
+    FileEntityInfo:
+      type: object
+      properties:
+        hash:
+          type: string
+        name:
+          type: string
+
+    # ApplicationInfo:
+    #   type: object
+    #   properties:
+    #     id: 
+    #       type: string
+	  #     name:
+    #       type: string
+	  #     vendor: 
+    #       type: string
+	  #     exposedMachines:
+    #       type: integer
+    #       format: int32
+	  #     publicExploit:
+    #       type: boolean
+
     Metadata:
       type: object
       properties:
@@ -81,182 +178,598 @@ components:
           type: string
         errorType:
           type: string
+      required:
+        - status 
                         
     UserInfo:
       type: object
       properties:
         id:
-          type: string
-        name:
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
+              description: unique key for user
+        userName:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
+              description: unique identifier for the user, e.g. username
         email: 
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
+              description: primary email address of user
         displayName:
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
+              description: primary email address of user
         organization: 
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
         role: 
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
+              description: role/designation of user
         manager: 
-          tyoe: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
+              description: manager/supervisor of user
         department: 
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
+              description: department of user
         groups:
-          type: array
-          items:
-            type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: array
+              items:
+                type: string
         lastLoginTime: 
-          type: string
-          format: date-time
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
+              format: date-time
         location:
-          $ref: '#/components/schemas/Location'
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              $ref: '#/components/schemas/Location'
         status: 
-          $ref: '#/components/schemas/UserStatus'
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              $ref: '#/components/schemas/UserStatus'
         firstSeen: 
-          type: string
-          format: date-time
-        thumbnailPhotoUrl: 
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
+              format: date-time
+        thumbnailPhotoUrl:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
+      required:
+        - id
+        - userName
+        - email
     HostInfo:
       type: object
       properties:
-        id: 
-          type: string
+        id:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
         name:
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
         localIp:
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
         externalIp:
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
         os:
-          $ref: '#/components/schemas/OSPlatform' 
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              $ref: '#/components/schemas/OSPlatform' 
         osVersion:
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
         macAddress:
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
         firstSeen:
-          type: string
-          format: date-time
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
+              format: date-time
         lastSeen:
-          type: string
-          format: date-time
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
+              format: date-time
         agentVersion:
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
         domain:
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
+        biosVersion:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string,
+        vendor:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
+      required:
+        - id
+        - name
+        - firstSeen
+        - lastSeen
     LoginEvent:
       type: object
       properties:
-        ipAddress: 
-          type: string 
+        ipAddress:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value: 
+              type: string 
         linkedApplication:
-          type: string
-        time: 
-          type: string
-          format: date-time
-        eventType: 
-          type: string
-          enum:
-          - failure
-          - challenge
-          - verification
-          - logout
-          - successful
-          - password_change
-          - user_suspended
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
+        time:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
+              format: date-time
+        eventType:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
+              enum:
+              - failure
+              - challenge
+              - verification
+              - logout
+              - successful
+              - password_change
+              - user_suspended
         eventInfo: 
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: object
         actor: 
-          $ref: '#/components/schemas/UserInfo'
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              $ref: '#/components/schemas/UserInfo'
         client:
-          $ref: '#/components/schemas/Client'
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              $ref: '#/components/schemas/Client'
     Ticket:
       type: object
       properties:
-        id: 
-          type: string
+        id:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
         number:
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
         summary:
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
         createdAt:
-          type: string
-          format: date-time
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
+              format: date-time
         updatedAt:
-          type: string
-          format: date-time
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
+              format: date-time
         priority:
-          type: string
-          enum:
-          - low
-          - medium
-          - high
-          - higher
-          - highest
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
+              enum:
+              - low
+              - medium
+              - high
+              - higher
+              - highest
         status:
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              type: string
         creator:
-          $ref: '#/components/schemas/UserInfo'
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              $ref: '#/components/schemas/UserInfo'
         assignee:
-          $ref: '#/components/schemas/UserInfo'
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              $ref: '#/components/schemas/UserInfo'
     RelatedEntities:
       type: object
       properties:
-        users:
+        user:
           type: array
           items:
-            $ref: '#/components/schemas/UserInfo'
-        hosts:
+            $ref: '#/components/schemas/UserEntityInfo'
+        host:
           type: array
           items:
-            $ref: '#/components/schemas/HostInfo'
-        ips:
-          type: array
-          items:
-            type: string
-        filenames:
+            $ref: '#/components/schemas/HostEntityInfo'
+        ip:
           type: array
           items:
             type: string
-        urls:
+        file:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileEntityInfo'
+        url:
           type: array
           items:
             type: string
-        domains:
+        domain:
           type: array
           items:
-            type: string  
+            type: string
     AlertInfo:
       type: object
       properties:
-        id: 
-          type: string
+        id:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
         severity:
-          type: string
-          enum:
-            - low
-            - medium
-            - high
-            - critical
-            - unknown
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
+              enum:
+                - low
+                - medium
+                - high
+                - critical
+                - unknown
         category:
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
         title:
-          type: string
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
         creationTime:
-          type: string
-          format: date-time
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
+              format: date-time
         lastUpdated:
-          type: string
-          format: date-time
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
+              format: date-time
         status: 
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 1
+            value:
+              type: string
+              enum:
+              - open
+              - inprogress
+              - closed
+        relatedEntities:
+          type: object
+          properties:
+            priority: 
+              $ref: '#/components/schemas/FieldPriority'
+              default: 2
+            value:
+              $ref: '#/components/schemas/RelatedEntities'
+    Condition:
+      type: object
+      properties:
+        clause:
+          type: array
+          items:
+            type: object
+            properties:
+              op:
+                type: string
+                enum:
+                  - equals
+                  - notequals
+                  - greater
+                  - greaterequals
+                  - less
+                  - lessequals
+                  - in
+                  - startswith
+                  - notstartswith
+                  - endswith
+                  - notendswith
+                  - contains
+                  - notcontains
+                  - full_text
+                  - regex
+                  - notregex
+              values:
+                type: array
+                items:
+                  type: string
+        join:
           type: string
           enum:
-          - open
-          - inprogress
-          - closed
-        relatedEntities:
-          $ref: '#/components/schemas/RelatedEntities'
+            - NOT 
+            - AND
+            - OR
+            - AND NOT
+            - OR NOT
+        key: 
+          type: string
+        outer_join:
+          type: string
+          enum:
+            - NOT 
+            - AND
+            - OR
+        qid:
+          type: string
+    Selection:
+      type: object
+      properties:
+        actions:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              value:
+                type: string
+    ParseTree:
+      type: object
+      properties:
+        conditions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Condition"
+        selections:
+          type: array
+          items:
+            $ref: "#/components/schemas/Selection"
+    QueryArg:
+        type: object
+        properties:
+          query_start_time:
+            type: string
+          query_end_time:
+            type: string
+          query_time_zone:
+            type: string
+          query_page_size:
+            type: integer
+            format: int32
+            default: 1000
+          query_page_offset:
+            type: integer
+            format: int32
     Category:
       type: string
       enum:

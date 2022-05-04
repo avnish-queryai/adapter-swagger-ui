@@ -23,11 +23,11 @@ paths:
                 platform:
                   type: string
                 parseTree:
-                  type: object
+                  $ref: components.yaml#/components/schemas/ParseTree
                 params:
                   type: string
                 args:
-                  type: object
+                  $ref: components.yaml#/components/schemas/QueryArg
       responses:
         '201':    # status code
           description: A JSON object with request ID.
